@@ -17,11 +17,7 @@ const upload = multer({ //multer settings
         }
         callback(null, true);
     }
-}).single('file')
-
-// app.use(cors())
-// app.use(bodyparser.json())
-
+}).single('file') //multer is used to add file in a directory
 
 var myExam = {}
 
@@ -43,18 +39,18 @@ const field = {
         course_group: im.fields.course_group.title,
     
     }
-};
+}; // filed is used to access the the name of the fields in excel file
 
 async function imported(jsonArray) {
     var exam = {};
     var participants = [];
+  // these variables are used to get the content in rows of excel file
     var fname = "";
     var stdno = "";
     var profname = "";
     var seatno = "";
     var dateform = "";
     var datef = "";
-    
     var stdname ="";
     var courseC = "";
     var courseG = "";
@@ -64,8 +60,7 @@ async function imported(jsonArray) {
     var vsem = "";
     var vloc = "";
     
-    
-    
+  //loops are for reading row element with correct feild name
     for (var i = 0; i < jsonArray.length; i++) {
         for (let index = 0; index < field.participant.std_name.length; index++) {
             if (jsonArray[i][field.participant.std_name[index]] != undefined) {
@@ -107,7 +102,6 @@ async function imported(jsonArray) {
                 vloc = jsonArray[i][field.participant.location[index]];
             }
         }
-        
 
         for (let index = 0; index < field.participant.std_family_name.length; index++) {
             if (jsonArray[i][field.participant.std_family_name[index]] != undefined) {
@@ -129,16 +123,13 @@ async function imported(jsonArray) {
                 seatno = jsonArray[i][field.participant.seat[index]];
             }
         }
-        
         for (let index = 0; index < field.date.length; index++) {
             if (jsonArray[i][field.date[index]] != undefined) {
               dateform =  moment(jsonArray[i][field.date[index]], 'jYYYY/jM/jD').format('YYYY-M-D')
               console.log(dateform)
             }
-            
         }
-        
-
+      
         participants.push({
                 std_name: stdname,
                 std_family_name: fname,
@@ -147,8 +138,7 @@ async function imported(jsonArray) {
                 location: vloc,
                 prof_name: pname,
                 prof_family_name: profname,
-                course_group: courseG
-            
+                course_group: courseG 
         });
     }
     exam={
@@ -160,8 +150,6 @@ async function imported(jsonArray) {
         };
     
     return {exam,participants};
-  
-    
 }
 
 
