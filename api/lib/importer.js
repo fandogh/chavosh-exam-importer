@@ -5,23 +5,21 @@ const path = require('path')
 const multer = require('multer')
 var moment = require('moment-jalaali')
 const im = require('../fields').exam
-
-const upload = multer({ //multer settings
+const upload = multer({ // multer settings
   dest: 'uploads/',
-  fileFilter: function (req, file, callback) { //file filter
+  fileFilter: function (req, file, callback) { // file filter
     if (['.xls', '.xlsx', '.csv'].indexOf(path.extname(file.originalname)) === -1) {
-      return callback(new Error('Wrong extension type'));
+      return callback(new Error('Wrong extension type'))
     }
-    callback(null, true);
+    callback(null, true)
   }
-}).single('file') //multer is used to add file in a directory
+}).single('file') // multer is used to add file in a directory
 
 var myExam = {}
 
 const field = {
   course_code: im.fields.course_code.title,
   course_name: im.fields.course_name.title,
-
   date: im.fields.date.title,
   level: im.fields.level.title,
   semester: im.fields.semester.title,
@@ -33,19 +31,15 @@ const field = {
     location: im.fields.location.title,
     prof_name: im.fields.prof_name.title,
     prof_family_name: im.fields.prof_family_name.title,
-    course_group: im.fields.course_group.title,
-
+    course_group: im.fields.course_group.title
   }
-}; // filed is used to access the the name of the fields in excel file
+} // filed is used to access the the name of the fields in excel file
 
-async function imported(jsonArray) {
-  var exam = {};
-  var participants = [];
+async function imported (jsonArray) {
+  var exam = {}
+  var participants = []
 
-  //loops are for reading row element with correct feild name
   for (var i = 0; i < jsonArray.length; i++) {
-
-
     participants.push({
       std_name: content(i, jsonArray, field).stdname,
       std_family_name: content(i, jsonArray, field).fname,
@@ -108,16 +102,16 @@ module.exports = {
 }
 
 function content(i, jsonArray, field) {
-  var fname = "";
-  var stdno = "";
-  var profname = "";
-  var seatno = "";
-  var dateform = "";
-  var stdname = "";
-  var courseG = "";
-  var pname = "";
-  var vsem = [];
-  var vloc = "";
+    var fname = ''
+    var stdno = ''
+    var profname = ''
+    var seatno = ''
+    var dateform = ''
+    var stdname = ''
+    var courseG = ''
+    var pname = ''
+    var vsem = ''
+    var vloc = ''
   var x = 0
   for (var key in field)
 
