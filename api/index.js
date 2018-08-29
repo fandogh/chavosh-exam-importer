@@ -3,9 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const app = module.exports = express()
 const bodyparser = require('body-parser')
-var mongoose = require('mongoose')
 const fileUpload = require('express-fileupload')
-const { getfile} = require('./lib/importer')
+const {getfile} = require('./lib/importer')
 const {
   Exam
 } = require('./exam')
@@ -21,7 +20,6 @@ app.use(bodyparser.json())
 
 app.post('/import', async function (req, res) {
   res.sendStatus(200)
-
   const exams = await getfile(req.files.file)
 
   for (let exam of exams) {
@@ -36,5 +34,5 @@ app.post('/import', async function (req, res) {
     newExam.save(function (error) {
       if (error) { console.log(error) }
     })
-}
+  }
 })

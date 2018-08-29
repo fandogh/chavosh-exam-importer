@@ -16,14 +16,6 @@ var examSchema = new Schema({
   level: { type: String },
   semester: { type: String },
   participants: [{
-    // std_name:   String ,
-    // std_family_name:   String,
-    // std_number:   String ,
-    // seat:   String,
-    // location:   String,
-    // prof_name:   String,
-    // prof_family_name:   String,
-    // course_group:   String,
   }],
   enabled: { type: Boolean, default: false },
   seat_visible: { type: Boolean, default: false }
