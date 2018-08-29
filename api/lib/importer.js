@@ -2,20 +2,9 @@
 const csv = require('csvtojson')
 const XLSX = require('xlsx')
 const path = require('path')
-const multer = require('multer')
 const moment = require('moment-jalaali')
 const im = require('../fields').exam
 const Boom = require('boom') 
-
-const upload = multer({ //multer settings
-  dest: 'uploads/',
-  fileFilter: function (req, file, callback) { //file filter
-    if (['.xls', '.xlsx', '.csv'].indexOf(path.extname(file.originalname)) === -1) {
-      return callback(new Error('Wrong extension type'));
-    }
-    callback(null, true);
-  }
-}).single('file') //multer is used to add file in a directory
 
 var myExam = {}
 
@@ -75,38 +64,35 @@ async function getfile(file) {
   if (file === null){
       throw Boom.badRequest('فایلی اپلود نشده است')
   }
-  return new Promise(async (resolve, reject) => {
-    let ws
-    let json
+  
+  let ws
+  let json
 
-    switch (path.extname(file.originalname)) {
-      case '.csv':
-        const jsonArray = await csv().fromFile(file.path)
-        myExam = await imported(jsonArray)
-        resolve(myExam)
-        return
+  switch (path.extname(file.name)) {
+    case '.csv':
+      const jsonArray = await csv().fromStream(file.data)
+      myExam = await imported(jsonArray)
+      return [myExam]
 
-      case '.xls':
-        ws = XLSX.readFile(file.path)
-        json = XLSX.utils.sheet_to_json(ws.Sheets[ws.SheetNames[0]])
+    case '.xls':
+    case '.xlsx':
+      ws = XLSX.read(file.data)
+      let result = []
+      for(let sheet of ws.SheetNames){
+        json = XLSX.utils.sheet_to_json(ws.Sheets[sheet])
         myExam = await imported(json)
-        resolve(myExam)
-        break
-      case '.xlsx':
-        ws = XLSX.readFile(file.path)
-        json = XLSX.utils.sheet_to_json(ws.Sheets[ws.SheetNames[0]])
-        myExam = await imported(json)
-        resolve(myExam)
-        break
-      default:
-        resolve(0)
-    }
-  })
+        result.push(myExam)
+      }
+      return result
+
+    default:
+    throw Boom.badRequest('نوع فایل قابل قبول نیست')
+  }
 }
 
 module.exports = {
   getfile,
-  upload
+ // upload
 }
 
 function content(i, jsonArray, field) {
