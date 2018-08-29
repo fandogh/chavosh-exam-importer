@@ -3,8 +3,9 @@ const csv = require('csvtojson')
 const XLSX = require('xlsx')
 const path = require('path')
 const multer = require('multer')
-var moment = require('moment-jalaali')
+const moment = require('moment-jalaali')
 const im = require('../fields').exam
+const Boom = require('boom') 
 
 const upload = multer({ //multer settings
   dest: 'uploads/',
@@ -39,11 +40,11 @@ const field = {
 }; // filed is used to access the the name of the fields in excel file
 
 async function imported(jsonArray) {
-  var exam = {};
-  var participants = [];
+  let exam = {};
+  let participants = [];
 
   //loops are for reading row element with correct feild name
-  for (var i = 0; i < jsonArray.length; i++) {
+  for (let i = 0; i < jsonArray.length; i++) {
 
     participants.push({
       std_name: content(i, jsonArray, field).dynamics[0],
@@ -70,8 +71,10 @@ async function imported(jsonArray) {
   };
 }
 
-
 async function getfile(file) {
+  if (file === null){
+      throw Boom.badRequest('فایلی اپلود نشده است')
+  }
   return new Promise(async (resolve, reject) => {
     let ws
     let json
@@ -107,20 +110,24 @@ module.exports = {
 }
 
 function content(i, jsonArray, field) {
-  var dateform = ''
-  var dynamics = []
-  var statics = []
-  var x = 0
-  var y = 0
+  let dateform = ''
+  let dynamics = []
+  let statics = []
+  let x = 0
+  let y = 0
 
-  for (var key in field)
+  for (let key in field)
     if (key === "participant")
-      for (var key2 in field[key]) {
+      for (let key2 in field[key]) {
+        let check = 0
         for (let index = 0; index < field[key][key2].length; index++) {
           if (jsonArray[i][field[key][key2][index]] != undefined) {
             dynamics[y++] = jsonArray[i][field[key][key2][index]];
+            check = 1
           }
         }
+        if(check == 0)
+          dynamics[y++] = ''
       }
   else if (key === "date") {
     for (let index = 0; index < field.date.length; index++) {
@@ -130,11 +137,15 @@ function content(i, jsonArray, field) {
       }
     }
   } else {
+    let check = 0
     for (let index = 0; index < field[key].length; index++) {
       if (jsonArray[i][field[key][index]] != undefined) {
         statics[x++] = jsonArray[i][field[key][index]];
+        check = 1
       }
     }
+    if(check == 0)
+      statics[x++] = ''
   }
 
   return {
