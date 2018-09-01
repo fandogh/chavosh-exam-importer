@@ -90,7 +90,6 @@ async function getfile (file) {
 
 module.exports = {
   getfile
-  // upload
 }
 
 function content (i, jsonArray, field) {
@@ -116,7 +115,6 @@ function content (i, jsonArray, field) {
       for (let index = 0; index < field.date.length; index++) {
         if (jsonArray[i][field.date[index]] !== undefined) {
           dateform = moment(jsonArray[i][field.date[index]], 'jYYYY/jM/jD').format('YYYY-M-D')
-        // console.log(dateform)
         }
       }
     } else {

@@ -11,7 +11,7 @@ exports.exam = {
       type: 'string'
     },
     std_family_name: {
-      title: ['نام خوانوادگی', 'نام خانوادگی دانشجو'],
+      title: ['نام خانوادگی', 'نام خانوادگی دانشجو'],
       type: 'string'
     },
     course_code: {
