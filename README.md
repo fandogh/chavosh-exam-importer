@@ -32,3 +32,7 @@ optional:
    
 'نام خانوادگی استاد',
 
+If there's more than one sheet we assume there's more than one exam
+Time of exams must be added manully
+recommended: each file contains one sheet for one exam
+
