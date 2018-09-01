@@ -1,4 +1,3 @@
-'use strict'
 const csv = require('csvtojson')
 const XLSX = require('xlsx')
 const path = require('path')
